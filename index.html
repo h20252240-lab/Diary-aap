@@ -53,7 +53,7 @@
         #main-diary {
     width: 100%; height: 100%; padding: 40px 25px;
     /* 💡 여기에 네가 저장해둔 내지 이미지 파일명을 적어줘! (예: 다이어리 내부a.jpg) */
-    background: linear-gradient(rgba(252, 250, 242, 0.92), rgba(244, 241, 234, 0.9)), url('다이어리 외부c..jpg') center/cover;
+    background: linear-gradient(rgba(252, 250, 242, 0.83), rgba(244, 241, 234, 0.9)), url('다이어리 외부c..jpg') center/cover;
     overflow-y: auto; display: flex; flex-direction: column;
 }
 
@@ -140,21 +140,32 @@
         <div class="tape"></div>
         <h2 id="page-name">To-Do List</h2>
         <div class="diary-content">
-    <textarea id="editor" placeholder="(｡- .•)"></textarea>
-    
-    <div id="todo-container">
-        <div class="todo-input-area">
-            <input type="text" id="todo-input" placeholder="오늘은 무슨 일이 생겨날까~…“〆(・ε・*)">
-            <button id="add-todo-btn">➕</button>
-        </div>
-        <ul id="todo-list"></ul>
-    </div>
-</div>
+<div class="diary-content">
+            <textarea id="editor" placeholder="오늘의 기록을 남겨보세요..."></textarea>
+            
+            <div id="todo-container">
+                <div class="todo-input-area">
+                    <input type="text" id="todo-input" placeholder="할 일 적고 엔터 꾹! ✏️">
+                    <button id="add-todo-btn">➕</button>
+                </div>
+                <ul id="todo-list"></ul>
+            </div>
 
+            <div id="wishlist-container">
+                <div class="wish-input-form">
+                    <input type="text" id="wish-name" placeholder="물건 이름 (예: 빈티지 찻잔)">
+                    <input type="text" id="wish-price" placeholder="가격 (예: 25,000원)">
+                    <input type="text" id="wish-reason" placeholder="왜 갖고 싶나요?">
+                    <input type="file" id="wish-file" accept="image/*" style="font-size: 0.8rem;">
+                    <button id="add-wish-btn" style="background: var(--point-green); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">위시리스트에 담기 ✨</button>
+                </div>
+                <ul id="wish-list"></ul>
+            </div>
+        </div>
     <nav>
-        <div class="stamp" onclick="changePage('todo')"> ✓<br>할 일</div>
-        <div class="stamp" onclick="changePage('weekly')">✴ ͙ <br>메모</div>
-        <div class="stamp" onclick="changePage('memo')">복습<br>진도</div>
+        <div class="stamp" onclick="changePage('To do')">˗ˋˏϟˎˊ˗<br>할 일</div>
+        <div class="stamp" onclick="changePage('I wish...❂')">나애<br>위시wish</div>
+        <div class="stamp" onclick="changePage('memo')">✴ ͙ <br>메모</div>
     </nav>
 </div>
 
@@ -276,20 +287,91 @@ const firebaseConfig = {
     };
 
     // --- 페이지 탭 전환 시 화면 토글 ---
+// --- 페이지 탭 전환 시 화면 토글 (여기부터 덮어쓰기!) ---
     window.changePage = (page) => {
         currentPage = page;
         document.getElementById('page-name').innerText = page.toUpperCase();
         
-        // 투두 탭이면 메모장 숨기고 투두 리스트 켜기
+        // 모든 컨테이너 일단 숨기기
+        editor.style.display = 'none';
+        todoContainer.style.display = 'none';
+        document.getElementById('wishlist-container').style.display = 'none';
+        
+        // 선택한 페이지만 보이기
         if (page === 'todo') {
-            editor.style.display = 'none';
             todoContainer.style.display = 'flex';
+        } else if (page === 'wishlist') {
+            document.getElementById('wishlist-container').style.display = 'flex';
         } else {
-            todoContainer.style.display = 'none';
             editor.style.display = 'block';
         }
-        
         loadData(page);
+    };
+
+    // --- 🎁 위시리스트 그리기 ---
+    function renderWishList(items) {
+        const wishList = document.getElementById('wish-list');
+        wishList.innerHTML = '';
+        items.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'wish-card';
+            li.innerHTML = `
+                <button class="delete-wish" onclick="deleteWish(${index})">×</button>
+                <img src="${item.image || ''}" alt="wish item">
+                <div class="wish-info">
+                    <div class="wish-name">${item.name}</div>
+                    <div class="wish-price">${item.price}</div>
+                    <div class="wish-reason">${item.reason}</div>
+                </div>
+            `;
+            wishList.appendChild(li);
+        });
+    }
+
+    // --- 🎁 위시리스트 추가하기 ---
+    document.getElementById('add-wish-btn').onclick = async () => {
+        const name = document.getElementById('wish-name').value;
+        const price = document.getElementById('wish-price').value;
+        const reason = document.getElementById('wish-reason').value;
+        const file = document.getElementById('wish-file').files[0];
+        
+        if(!name || !uid) return;
+
+        let imageData = "";
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                imageData = reader.result;
+                await saveWishToFirebase({ name, price, reason, image: imageData });
+            };
+        } else {
+            await saveWishToFirebase({ name, price, reason, image: "" });
+        }
+    };
+
+    // --- 🎁 위시리스트 파이어베이스 저장 ---
+    async function saveWishToFirebase(newItem) {
+        const docRef = doc(db, "diaries", uid, "pages", "wishlist");
+        const docSnap = await getDoc(docRef);
+        let wishes = docSnap.exists() ? docSnap.data().items || [] : [];
+        wishes.push(newItem);
+        await setDoc(docRef, { items: wishes, time: new Date() });
+        
+        document.getElementById('wish-name').value = '';
+        document.getElementById('wish-price').value = '';
+        document.getElementById('wish-reason').value = '';
+    }
+
+    // --- 🎁 위시리스트 삭제 ---
+    window.deleteWish = async (index) => {
+        const docRef = doc(db, "diaries", uid, "pages", "wishlist");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let wishes = docSnap.data().items || [];
+            wishes.splice(index, 1);
+            await setDoc(docRef, { items: wishes });
+        }
     };
 </script>
 </body>
