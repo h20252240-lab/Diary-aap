@@ -140,12 +140,11 @@
         <div class="tape"></div>
         <h2 id="page-name">To-Do List</h2>
         <div class="diary-content">
-<div class="diary-content">
-            <textarea id="editor" placeholder="오늘의 기록을 남겨보세요..."></textarea>
+            <textarea id="editor" placeholder="(｡- .•)... 적어보아요...."></textarea>
             
             <div id="todo-container">
                 <div class="todo-input-area">
-                    <input type="text" id="todo-input" placeholder="할 일 적고 엔터 꾹! ✏️">
+                    <input type="text" id="todo-input" placeholder="바쁘다 바빠(๑´灬`๑)...">
                     <button id="add-todo-btn">➕</button>
                 </div>
                 <ul id="todo-list"></ul>
@@ -153,17 +152,17 @@
 
             <div id="wishlist-container">
                 <div class="wish-input-form">
-                    <input type="text" id="wish-name" placeholder="물건 이름 (예: 빈티지 찻잔)">
-                    <input type="text" id="wish-price" placeholder="가격 (예: 25,000원)">
-                    <input type="text" id="wish-reason" placeholder="왜 갖고 싶나요?">
+                    <input type="text" id="wish-name" placeholder="무엇인고">
+                    <input type="text" id="wish-price" placeholder="얼마인가">
+                    <input type="text" id="wish-reason" placeholder="이건 나에 것이야 왜냐면. (՞⋅֊⋅՞)">
                     <input type="file" id="wish-file" accept="image/*" style="font-size: 0.8rem;">
-                    <button id="add-wish-btn" style="background: var(--point-green); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">위시리스트에 담기 ✨</button>
+                    <button id="add-wish-btn" style="background: var(--point-green); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">위시리스트에 추가~₍ᐢ..ᐢ₎⊹</button>
                 </div>
                 <ul id="wish-list"></ul>
             </div>
         </div>
     <nav>
-        <div class="stamp" onclick="changePage('To do')">˗ˋˏϟˎˊ˗<br>할 일</div>
+        <div class="stamp" onclick="changePage('To do')">˗ˋˏϟˎˊ˗<br> 할 일</div>
         <div class="stamp" onclick="changePage('I wish...❂')">나애<br>위시wish</div>
         <div class="stamp" onclick="changePage('memo')">✴ ͙ <br>메모</div>
     </nav>
@@ -228,18 +227,24 @@ const firebaseConfig = {
     }
 
     // --- 데이터 실시간 불러오기 ---
+// --- 데이터 실시간 불러오기 (이걸로 교체!!) ---
     function loadData(page) {
         if (!uid) return;
         onSnapshot(doc(db, "diaries", uid, "pages", page), (docSnap) => {
             if (page === 'todo') {
+                // 할일 페이지일 때
                 const tasks = docSnap.exists() ? docSnap.data().tasks || [] : [];
                 renderTodoList(tasks);
+            } else if (page === 'wishlist') {
+                // ✨ 위시리스트 페이지일 때 (이게 빠져있었어!)
+                const items = docSnap.exists() ? docSnap.data().items || [] : [];
+                renderWishList(items);
             } else {
+                // 메모/주간 페이지일 때
                 editor.value = docSnap.exists() ? docSnap.data().content || "" : "";
             }
         });
     }
-
     // --- 메모장 자동 저장 ---
     editor.oninput = () => {
         if (!uid || currentPage === 'todo') return;
