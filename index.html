@@ -3,121 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vintage Online Diary</title>
+    <title>My Cottagecore Diary</title>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
-            --vintage-green: #556b2f;
-            --paper-color: #fcfaf2;
+            --bg-color: #e8e4d9; /* 빈티지 베이지 */
+            --point-green: #5d7c5a; /* 잔디색 */
+            --paper-texture: url('https://www.transparenttextures.com/patterns/natural-paper.png');
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Nanum Pen Script', cursive; background: #ddd; display: flex; justify-content: center; }
+        body { 
+            font-family: 'Nanum Pen Script', cursive; 
+            background: var(--bg-color); 
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
 
+        /* 메인 컨테이너: 스마트폰 비율 */
         #app {
-            width: 100%; max-width: 420px; height: 100vh;
-            background: white; position: relative; overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            width: 100%; max-width: 412px; height: 90vh;
+            background: #fff; position: relative; overflow: hidden;
+            border-radius: 30px; border: 8px solid #333; /* 폰 케이스 느낌 */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
 
-        /* --- 1. 표지 (image_0, 1 기반) --- */
+        /* --- 1. 표지 (감성 디자인) --- */
         #cover-page {
-            position: absolute; inset: 0; z-index: 20;
-            background: url('다이어리 외부a..jpg') center/cover; /* 실제 파일명 확인 */
+            position: absolute; inset: 0; z-index: 100;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('다이어리 내부 메모지2.jpg') center/cover;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .lace { width: 100%; height: 60px; opacity: 0.8; }
-        .lace.top { background: url('다이어리 내부c..jpg') top/contain no-repeat; position: absolute; top: 0; }
-        .lace.bottom { background: url('lace_bottom.png') bottom/contain no-repeat; position: absolute; bottom: 0; }
-        
-        .title-cross {
-            font-family: 'VT323', monospace; color: white; font-size: 3rem;
-            text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin: 20px;
+        #cover-page.open { transform: translateY(-100%); }
+
+        .cover-title {
+            font-family: 'VT323', monospace; color: white; font-size: 3.5rem;
+            text-align: center; line-height: 1.1; margin-bottom: 40px;
+            text-shadow: 3px 3px 0px var(--point-green);
         }
 
-        #login-btn {
-            padding: 10px 25px; border: 2px dashed white; background: rgba(255,255,255,0.2);
-            color: white; font-size: 1.5rem; cursor: pointer; border-radius: 15px;
-            backdrop-filter: blur(5px);
+        .start-btn {
+            background: white; color: var(--point-green); border: 2px dashed var(--point-green);
+            padding: 12px 30px; font-size: 1.8rem; border-radius: 50px; cursor: pointer;
+            font-family: inherit; transition: 0.3s;
+        }
+        .start-btn:hover { transform: scale(1.1); background: var(--point-green); color: white; }
+
+        /* --- 2. 다이어리 내지 (실제 구현) --- */
+        #main-diary {
+            width: 100%; height: 100%; padding: 40px 25px;
+            background-color: #fcfaf2; background-image: var(--paper-texture);
+            overflow-y: auto; display: flex; flex-direction: column;
         }
 
-        /* --- 2. 내지 (image_2, 3 기반) --- */
-        #main-page {
-            display: none; width: 100%; height: 100%;
-            background: url('image_a0c683.jpg') center/cover; /* 종이질감 배경 */
-            padding: 40px 20px 100px; overflow-y: auto;
+        /* 마스킹 테이프 효과 */
+        .tape {
+            width: 100px; height: 30px; background: rgba(181, 201, 154, 0.6);
+            margin: -20px auto 20px; transform: rotate(-2deg); box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
         }
 
-        .page-container {
-            background: rgba(255, 255, 255, 0.6); padding: 20px;
-            border-radius: 10px; border: 1px dashed #aaa; min-height: 70vh;
+        .diary-content {
+            flex-grow: 1; border: 1px solid rgba(0,0,0,0.05); padding: 15px; border-radius: 10px;
         }
 
-        .todo-item {
-            display: flex; align-items: center; gap: 10px; font-size: 1.8rem; margin-bottom: 10px;
-        }
-        .todo-item input[type="checkbox"] { transform: scale(1.5); accent-color: var(--vintage-green); }
+        h2 { color: var(--point-green); font-size: 2.5rem; border-bottom: 1px dashed #ccc; margin-bottom: 20px; }
 
-        textarea#memo-area {
-            width: 100%; height: 50vh; background: transparent; border: none;
-            font-family: inherit; font-size: 1.6rem; outline: none; line-height: 1.5;
+        /* 입력 영역 */
+        textarea {
+            width: 100%; height: 350px; background: transparent; border: none;
+            font-family: inherit; font-size: 1.6rem; line-height: 1.8; outline: none;
+            background-image: linear-gradient(#eee 1px, transparent 1px); background-size: 100% 1.8rem;
         }
 
-        /* --- 3. 하단 우표 메뉴 (image_3 기반) --- */
+        /* --- 3. 우표 메뉴 --- */
         nav {
-            position: absolute; bottom: 0; width: 100%; height: 90px;
-            background: rgba(255,255,255,0.8); display: flex; justify-content: space-around;
-            align-items: center; border-top: 1px dashed #888; z-index: 10;
+            position: absolute; bottom: 20px; width: 100%;
+            display: flex; justify-content: space-around; padding: 0 20px;
         }
         .stamp {
-            width: 60px; height: 70px; background: white; border: 2px dotted #999;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer;
+            width: 65px; height: 80px; background: white; border: 1px solid #ddd;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1); cursor: pointer;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 1.1rem; transition: 0.3s;
         }
-        .stamp:nth-child(odd) { transform: rotate(-3deg); }
-        .stamp:nth-child(even) { transform: rotate(3deg); }
+        .stamp:hover { transform: translateY(-10px) rotate(5deg); }
+        .stamp img { width: 40px; margin-bottom: 5px; }
+
+        /* 로딩 화면 */
+        #loading {
+            position: fixed; inset: 0; background: white; z-index: 1000;
+            display: flex; justify-content: center; align-items: center; font-size: 2rem;
+        }
     </style>
 </head>
 <body>
 
+<div id="loading">기다리는 중... 🌿</div>
+
 <div id="app">
     <div id="cover-page">
-        <div class="lace top"></div>
-        <h1 class="title-cross">Hold Space for the Becoming</h1>
-        <button id="login-btn">Diary Start ⭐</button>
-        <div class="lace bottom"></div>
+        <h1 class="cover-title">Hold Space<br>for the<br>Becoming</h1>
+        <button class="start-btn" id="entry-btn">Open Diary ✨</button>
     </div>
 
-    <div id="main-page">
-        <div class="page-container" id="content">
-            <h2 id="page-title">To-Do List</h2>
-            <div id="data-area">
-                </div>
+    <div id="main-diary">
+        <div class="tape"></div>
+        <h2 id="page-name">To-Do List</h2>
+        <div class="diary-content">
+            <textarea id="editor" placeholder="오늘의 일기~(●'◡'●)"></textarea>
         </div>
     </div>
 
-    <nav id="navbar" style="display: none;">
-        <div class="stamp" onclick="showPage('todo')"><span>📝</span><span>할일</span></div>
-        <div class="stamp" onclick="showPage('weekly')"><span>📅</span><span>주간</span></div>
-        <div class="stamp" onclick="showPage('tracker')"><span>⏳</span><span>기록</span></div>
-        <div class="stamp" onclick="showPage('memo')"><span>💭</span><span>메모</span></div>
+    <nav>
+        <div class="stamp" onclick="changePage('todo')">📝<br>할 일</div>
+        <div class="stamp" onclick="changePage('weekly')">📅<br>위클리</div>
+        <div class="stamp" onclick="changePage('memo')">💭<br>메모</div>
     </nav>
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    // ❗ 1. 네 파이어베이스 설정값으로 교체해!
-    const firebaseConfig = {// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
+    // ❗ 1. 여기에 네 새로운 파이어베이스 설정값을 붙여넣어!
+   const firebaseConfig = {
   apiKey: "AIzaSyDyS13a742QxkQZnDTXs7vWysTL1lhEfXU",
   authDomain: "diary-app-bcd82.firebaseapp.com",
   projectId: "diary-app-bcd82",
@@ -125,9 +135,61 @@ const firebaseConfig = {
   messagingSenderId: "925531726073",
   appId: "1:925531726073:web:85640d386e62d2059b0228"
 };
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-}
+
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let uid = null;
+    let currentPage = 'todo';
+    const editor = document.getElementById('editor');
+
+    // 앱 로딩 처리
+    window.onload = () => document.getElementById('loading').style.display = 'none';
+
+    // 표지 열기 버튼 (로그인 성공 전에도 일단 열리게 해서 답답함 해소)
+    document.getElementById('entry-btn').onclick = () => {
+        document.getElementById('cover-page').classList.add('open');
+    };
+
+    // 익명 로그인 실행
+    signInAnonymously(auth).catch(err => alert("파이어베이스 설정 오류: " + err.message));
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            uid = user.uid;
+            loadData(currentPage);
+        }
+    });
+
+    // 데이터 실시간 불러오기
+    function loadData(page) {
+        if (!uid) return;
+        onSnapshot(doc(db, "diaries", uid, "pages", page), (doc) => {
+            if (doc.exists()) {
+                editor.value = doc.data().content;
+            } else {
+                editor.value = "";
+            }
+        });
+    }
+
+    // 데이터 저장 (입력할 때마다 자동 저장)
+    editor.oninput = () => {
+        if (!uid) return;
+        setDoc(doc(db, "diaries", uid, "pages", currentPage), {
+            content: editor.value,
+            time: new Date()
+        });
+    };
+
+    // 페이지 전환
+    window.changePage = (page) => {
+        currentPage = page;
+        document.getElementById('page-name').innerText = page.toUpperCase();
+        loadData(page);
+    };
 </script>
 
 </body>
