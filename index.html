@@ -7,9 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #e8e4d9; /* 빈티지 베이지 */
-            --point-green: #5d7c5a; /* 잔디색 */
-            --paper-texture: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            --bg-color: #e8e4d9;
+            --point-green: #5d7c5a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,15 +18,13 @@
             display: flex; justify-content: center; align-items: center; height: 100vh;
         }
 
-        /* 메인 컨테이너: 스마트폰 비율 */
         #app {
             width: 100%; max-width: 412px; height: 90vh;
             background: #fff; position: relative; overflow: hidden;
-            border-radius: 30px; border: 8px solid #333; /* 폰 케이스 느낌 */
+            border-radius: 30px; border: 8px solid #333;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
 
-        /* --- 1. 표지 (감성 디자인) --- */
         #cover-page {
             position: absolute; inset: 0; z-index: 100;
             background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('다이어리 내부 메모지2.jpg') center/cover;
@@ -49,15 +46,12 @@
         }
         .start-btn:hover { transform: scale(1.1); background: var(--point-green); color: white; }
 
-        /* --- 2. 다이어리 내지 (실제 구현) --- */
         #main-diary {
-    width: 100%; height: 100%; padding: 40px 25px;
-    /* 💡 여기에 네가 저장해둔 내지 이미지 파일명을 적어줘! (예: 다이어리 내부a.jpg) */
-    background: linear-gradient(rgba(252, 250, 242, 0.83), rgba(244, 241, 234, 0.9)), url('다이어리 외부c..jpg') center/cover;
-    overflow-y: auto; display: flex; flex-direction: column;
-}
+            width: 100%; height: 100%; padding: 40px 25px;
+            background: linear-gradient(rgba(252, 250, 242, 0.83), rgba(244, 241, 234, 0.9)), url('다이어리 외부c..jpg') center/cover;
+            overflow-y: auto; display: flex; flex-direction: column;
+        }
 
-        /* 마스킹 테이프 효과 */
         .tape {
             width: 100px; height: 30px; background: rgba(181, 201, 154, 0.6);
             margin: -20px auto 20px; transform: rotate(-2deg); box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
@@ -69,14 +63,12 @@
 
         h2 { color: var(--point-green); font-size: 2.5rem; border-bottom: 1px dashed #ccc; margin-bottom: 20px; }
 
-        /* 입력 영역 */
         textarea {
             width: 100%; height: 350px; background: transparent; border: none;
             font-family: inherit; font-size: 1.6rem; line-height: 1.8; outline: none;
             background-image: linear-gradient(#eee 1px, transparent 1px); background-size: 100% 1.8rem;
         }
 
-        /* --- 3. 우표 메뉴 --- */
         nav {
             position: absolute; bottom: 20px; width: 100%;
             display: flex; justify-content: space-around; padding: 0 20px;
@@ -85,50 +77,43 @@
             width: 65px; height: 80px; background: white; border: 1px solid #ddd;
             box-shadow: 3px 3px 10px rgba(0,0,0,0.1); cursor: pointer;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 1.1rem; transition: 0.3s;
+            font-size: 1.1rem; transition: 0.3s; text-align: center;
         }
         .stamp:hover { transform: translateY(-10px) rotate(5deg); }
-        .stamp img { width: 40px; margin-bottom: 5px; }
 
-        /* 로딩 화면 */
         #loading {
             position: fixed; inset: 0; background: white; z-index: 1000;
             display: flex; justify-content: center; align-items: center; font-size: 2rem;
-/* --- 🌟 할일 목록(To-Do) 전용 스타일 --- */
-#todo-container { display: none; flex-direction: column; height: 100%; }
-.todo-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
+        }
 
-#todo-input { 
-    flex-grow: 1; border: none; border-bottom: 2px dashed var(--point-green); 
-    background: transparent; font-family: inherit; font-size: 1.8rem; 
-    outline: none; padding: 5px; color: #333;
-}
+        /* --- 투두 스타일 --- */
+        #todo-container { display: none; flex-direction: column; height: 100%; }
+        .todo-input-area { display: flex; gap: 10px; margin-bottom: 20px; }
+        #todo-input { flex-grow: 1; border: none; border-bottom: 2px dashed var(--point-green); background: transparent; font-family: inherit; font-size: 1.8rem; outline: none; padding: 5px; color: #333; }
+        #add-todo-btn { background: var(--point-green); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1.5rem; cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        #todo-list { list-style: none; overflow-y: auto; flex-grow: 1; }
+        .todo-item { display: flex; align-items: center; gap: 12px; font-size: 1.8rem; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); animation: fadeIn 0.3s ease; }
+        .todo-item input[type="checkbox"] { transform: scale(1.3); accent-color: var(--point-green); cursor: pointer; }
 
-#add-todo-btn { 
-    background: var(--point-green); color: white; border: none; 
-    border-radius: 50%; width: 35px; height: 35px; font-size: 1.5rem; 
-    cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-}
+        /* --- 위시리스트 스타일 --- */
+        #wishlist-container { display: none; flex-direction: column; gap: 20px; }
+        .wish-input-form { background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 15px; border: 1px dashed var(--point-green); display: flex; flex-direction: column; gap: 10px; }
+        .wish-input-form input { border: none; background: transparent; border-bottom: 1px solid #ddd; padding: 5px; font-family: inherit; outline: none; }
+        #wish-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; list-style: none; }
+        .wish-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 3px 3px 10px rgba(0,0,0,0.05); position: relative; animation: fadeIn 0.4s ease; }
+        .wish-card img { width: 100%; height: 120px; object-fit: cover; background: #eee; }
+        .wish-info { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+        .wish-name { font-weight: bold; font-size: 1.2rem; color: var(--point-green); }
+        .wish-price { font-size: 0.9rem; color: #888; }
+        .wish-reason { font-size: 1rem; color: #555; line-height: 1.2; }
+        .delete-wish { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.3); color: white; border: none; border-radius: 50%; cursor: pointer; width: 20px; height: 20px; }
 
-#todo-list { list-style: none; overflow-y: auto; flex-grow: 1; }
-
-.todo-item { 
-    display: flex; align-items: center; gap: 12px; 
-    font-size: 1.8rem; margin-bottom: 12px; padding-bottom: 8px; 
-    border-bottom: 1px solid rgba(0,0,0,0.05); animation: fadeIn 0.3s ease;
-}
-
-.todo-item input[type="checkbox"] { 
-    transform: scale(1.3); accent-color: var(--point-green); cursor: pointer; 
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }       
- }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="loading">(˙ ᵋ ˙ э )Э˖⋆࿐໋</div>
+<div id="loading">(˙ ᵋ ˙ э )Э˖⋆࿐໋ 로딩중...</div>
 
 <div id="app">
     <div id="cover-page">
@@ -138,7 +123,8 @@
 
     <div id="main-diary">
         <div class="tape"></div>
-        <h2 id="page-name">To-Do List</h2>
+        <h2 id="page-name">TO-DO</h2>
+        
         <div class="diary-content">
             <textarea id="editor" placeholder="(｡- .•)... 적어보아요...."></textarea>
             
@@ -161,13 +147,209 @@
                 <ul id="wish-list"></ul>
             </div>
         </div>
-    <nav>
-        <div class="stamp" onclick="changePage('To do')">˗ˋˏϟˎˊ˗<br> 할 일</div>
-        <div class="stamp" onclick="changePage('I wish...❂')">나애<br>위시wish</div>
+    </div> <nav>
+        <div class="stamp" onclick="changePage('todo')">˗ˋˏϟˎˊ˗<br> 할 일</div>
+        <div class="stamp" onclick="changePage('wishlist')">나애<br>위시wish</div>
         <div class="stamp" onclick="changePage('memo')">✴ ͙ <br>메모</div>
     </nav>
 </div>
 
 <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // ❗❗❗ 여기에 네 파이어베이스 정보 꼭 다시 넣어!! ❗❗❗
+const firebaseConfig = {
+  apiKey: "AIzaSyDyS13a742QxkQZnDTXs7vWysTL1lhEfXU",
+  authDomain: "diary-app-bcd82.firebaseapp.com",
+  projectId: "diary-app-bcd82",
+  storageBucket: "diary-app-bcd82.firebasestorage.app",
+  messagingSenderId: "925531726073",
+  appId: "1:925531726073:web:85640d386e62d2059b0228"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let uid = null;
+    let currentPage = 'todo';
+    let currentListener = null;
+
+    // 로딩 화면 무조건 끄기
+    const loading = document.getElementById('loading');
+    if(loading) loading.style.display = 'none';
+    setTimeout(() => { if(loading) loading.style.display = 'none'; }, 500);
+
+    const entryBtn = document.getElementById('entry-btn');
+    if(entryBtn) {
+        entryBtn.onclick = () => {
+            const cover = document.getElementById('cover-page');
+            if(cover) cover.classList.add('open');
+        };
+    }
+
+    signInAnonymously(auth).catch(err => {
+        console.log("로그인 에러:", err);
+        alert("파이어베이스 설정(API 키)을 확인해주세요!"); 
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) { uid = user.uid; changePage('todo'); }
+    });
+
+    // --- 할일 ---
+    function renderTodoList(tasks) {
+        const todoList = document.getElementById('todo-list');
+        if(!todoList) return;
+        todoList.innerHTML = '';
+        tasks.forEach((task, index) => {
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+            li.innerHTML = `<input type="checkbox" onchange="deleteTask(${index})"> <span>${task}</span>`;
+            todoList.appendChild(li);
+        });
+    }
+
+    async function addTask() {
+        const todoInput = document.getElementById('todo-input');
+        const text = todoInput ? todoInput.value.trim() : "";
+        if (!text || !uid) return;
+        const docRef = doc(db, "diaries", uid, "pages", "todo");
+        const docSnap = await getDoc(docRef);
+        let tasks = docSnap.exists() ? docSnap.data().tasks || [] : [];
+        tasks.push(text);
+        await setDoc(docRef, { tasks: tasks, time: new Date() });
+        if(todoInput) todoInput.value = '';
+    }
+
+    const addTodoBtn = document.getElementById('add-todo-btn');
+    if(addTodoBtn) addTodoBtn.onclick = addTask;
+    
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && currentPage === 'todo' && document.activeElement.id === 'todo-input') addTask();
+    });
+
+    window.deleteTask = async (index) => {
+        const docRef = doc(db, "diaries", uid, "pages", "todo");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let tasks = docSnap.data().tasks || [];
+            tasks.splice(index, 1);
+            await setDoc(docRef, { tasks: tasks });
+        }
+    };
+
+    // --- 메모 ---
+    const editor = document.getElementById('editor');
+    if(editor) {
+        editor.oninput = () => {
+            if (!uid || currentPage !== 'memo') return;
+            setDoc(doc(db, "diaries", uid, "pages", "memo"), { content: editor.value, time: new Date() });
+        };
+    }
+
+    // --- 위시리스트 ---
+    function renderWishList(items) {
+        const wishList = document.getElementById('wish-list');
+        if(!wishList) return;
+        wishList.innerHTML = '';
+        items.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'wish-card';
+            li.innerHTML = `
+                <button class="delete-wish" onclick="deleteWish(${index})">×</button>
+                <img src="${item.image || ''}" alt="wish item">
+                <div class="wish-info">
+                    <div class="wish-name">${item.name}</div>
+                    <div class="wish-price">${item.price}</div>
+                    <div class="wish-reason">${item.reason}</div>
+                </div>
+            `;
+            wishList.appendChild(li);
+        });
+    }
+
+    const addWishBtn = document.getElementById('add-wish-btn');
+    if(addWishBtn) {
+        addWishBtn.onclick = async () => {
+            const nameEl = document.getElementById('wish-name');
+            const priceEl = document.getElementById('wish-price');
+            const reasonEl = document.getElementById('wish-reason');
+            const fileEl = document.getElementById('wish-file');
+            
+            const name = nameEl ? nameEl.value : '';
+            const price = priceEl ? priceEl.value : '';
+            const reason = reasonEl ? reasonEl.value : '';
+            const file = fileEl && fileEl.files ? fileEl.files[0] : null;
+            
+            if(!name || !uid) return;
+
+            const docRef = doc(db, "diaries", uid, "pages", "wishlist");
+            const docSnap = await getDoc(docRef);
+            let wishes = docSnap.exists() ? docSnap.data().items || [] : [];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = async () => {
+                    wishes.push({ name, price, reason, image: reader.result });
+                    await setDoc(docRef, { items: wishes, time: new Date() });
+                };
+            } else {
+                wishes.push({ name, price, reason, image: "" });
+                await setDoc(docRef, { items: wishes, time: new Date() });
+            }
+            
+            if(nameEl) nameEl.value = '';
+            if(priceEl) priceEl.value = '';
+            if(reasonEl) reasonEl.value = '';
+        };
+    }
+
+    window.deleteWish = async (index) => {
+        const docRef = doc(db, "diaries", uid, "pages", "wishlist");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let wishes = docSnap.data().items || [];
+            wishes.splice(index, 1);
+            await setDoc(docRef, { items: wishes });
+        }
+    };
+
+    // --- 데이터 로드 & 페이지 전환 ---
+    function loadData(page) {
+        if (!uid) return;
+        if (currentListener) currentListener(); 
+
+        currentListener = onSnapshot(doc(db, "diaries", uid, "pages", page), (docSnap) => {
+            const ed = document.getElementById('editor');
+            if (page === 'todo') renderTodoList(docSnap.exists() ? docSnap.data().tasks || [] : []);
+            else if (page === 'wishlist') renderWishList(docSnap.exists() ? docSnap.data().items || [] : []);
+            else if (ed) ed.value = docSnap.exists() ? docSnap.data().content || "" : "";
+        });
+    }
+
+    window.changePage = (page) => {
+        currentPage = page;
+        const pageNameEl = document.getElementById('page-name');
+        if(pageNameEl) pageNameEl.innerText = page.toUpperCase();
+        
+        const ed = document.getElementById('editor');
+        const tc = document.getElementById('todo-container');
+        const wc = document.getElementById('wishlist-container');
+        
+        if(ed) ed.style.display = 'none';
+        if(tc) tc.style.display = 'none';
+        if(wc) wc.style.display = 'none';
+        
+        if (page === 'todo' && tc) tc.style.display = 'flex';
+        else if (page === 'wishlist' && wc) wc.style.display = 'flex';
+        else if (ed) ed.style.display = 'block';
+        
+        loadData(page);
+    };
+</script>
 </body>
 </html>
