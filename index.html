@@ -3,178 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>빈티지 다이어리 앱</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <title>Vintage Online Diary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* 기본 여백 없애기 및 폰트 적용 */
+        :root {
+            --vintage-green: #556b2f;
+            --paper-color: #fcfaf2;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Nanum Pen Script', cursive; /* 손글씨 폰트 */
-            background-color: #e0e0e0; /* PC에서 볼 때 뒷배경 */
-            display: flex;
-            justify-content: center; /* 화면을 가운데로 */
-        }
+        body { font-family: 'Nanum Pen Script', cursive; background: #ddd; display: flex; justify-content: center; }
 
-        /* 스마트폰 앱처럼 보이는 메인 컨테이너 */
         #app {
-            width: 100%;
-            max-width: 400px; /* 스마트폰 가로 크기 고정 */
-            height: 100vh; /* 화면 꽉 차게 */
-            background-color: #fff;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            width: 100%; max-width: 420px; height: 100vh;
+            background: white; position: relative; overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
 
-        /* --- 1. 표지 (앱 시작 화면) --- */
+        /* --- 1. 표지 (image_0, 1 기반) --- */
         #cover-page {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            /* ❗여기에 네가 올린 1번, 2번 잔디밭 이미지 파일명을 넣어❗ */
-            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
+            position: absolute; inset: 0; z-index: 20;
+            background: url('다이어리 외부a..jpg') center/cover; /* 실제 파일명 확인 */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .cover-title {
-            color: white;
-            font-size: 3.5rem;
-            text-align: center;
-            line-height: 1.2;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.6); /* 십자수 느낌 대신 뚜렷하게 */
-            margin-bottom: 30px;
-        }
-        .start-btn {
-            font-family: inherit;
-            font-size: 1.8rem;
-            padding: 10px 20px;
-            background: transparent;
-            color: white;
-            border: 2px dashed white; /* 스티치 느낌의 테두리 */
-            border-radius: 10px;
-            cursor: pointer;
+        .lace { width: 100%; height: 60px; opacity: 0.8; }
+        .lace.top { background: url('다이어리 내부c..jpg') top/contain no-repeat; position: absolute; top: 0; }
+        .lace.bottom { background: url('lace_bottom.png') bottom/contain no-repeat; position: absolute; bottom: 0; }
+        
+        .title-cross {
+            font-family: 'VT323', monospace; color: white; font-size: 3rem;
+            text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 20px;
         }
 
-        /* --- 2. 다이어리 내지 --- */
+        #login-btn {
+            padding: 10px 25px; border: 2px dashed white; background: rgba(255,255,255,0.2);
+            color: white; font-size: 1.5rem; cursor: pointer; border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* --- 2. 내지 (image_2, 3 기반) --- */
         #main-page {
-            display: none; /* 처음엔 숨겨둠 */
-            width: 100%; height: 100%;
-            /* ❗여기에 네가 올린 3번 종이 질감 이미지 파일명을 넣어❗ */
-            background-color: #fcfaf2;
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
-            padding: 30px 20px;
-            padding-bottom: 100px; /* 하단 메뉴가 가리지 않게 여백 */
-            overflow-y: auto;
+            display: none; width: 100%; height: 100%;
+            background: url('image_a0c683.jpg') center/cover; /* 종이질감 배경 */
+            padding: 40px 20px 100px; overflow-y: auto;
         }
 
-        /* 마스킹 테이프 장식 */
-        .washi-tape {
-            background-color: rgba(181, 201, 154, 0.7); /* 반투명한 녹색 테이프 */
-            width: 120px; height: 25px;
-            margin: 0 auto -15px auto;
-            transform: rotate(-3deg);
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        .page-container {
+            background: rgba(255, 255, 255, 0.6); padding: 20px;
+            border-radius: 10px; border: 1px dashed #aaa; min-height: 70vh;
         }
 
-        .page-title {
-            font-size: 3rem;
-            color: #556b2f;
-            text-align: center;
-            border-bottom: 2px dotted #ccc;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        /* 할 일 리스트 디자인 */
         .todo-item {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            display: flex; align-items: center; gap: 10px; font-size: 1.8rem; margin-bottom: 10px;
         }
-        .star-checkbox {
-            font-size: 1.5rem;
-            cursor: pointer;
+        .todo-item input[type="checkbox"] { transform: scale(1.5); accent-color: var(--vintage-green); }
+
+        textarea#memo-area {
+            width: 100%; height: 50vh; background: transparent; border: none;
+            font-family: inherit; font-size: 1.6rem; outline: none; line-height: 1.5;
         }
 
-        /* --- 3. 하단 네비게이션 (우표 모양 메뉴) --- */
+        /* --- 3. 하단 우표 메뉴 (image_3 기반) --- */
         nav {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-top: 1px dashed #aaa;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            z-index: 5;
+            position: absolute; bottom: 0; width: 100%; height: 90px;
+            background: rgba(255,255,255,0.8); display: flex; justify-content: space-around;
+            align-items: center; border-top: 1px dashed #888; z-index: 10;
         }
-
-        /* 우표 스타일의 버튼 */
-        .stamp-btn {
-            width: 60px; height: 70px;
-            background-color: white;
-            border: 2px dotted #888;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
+        .stamp {
+            width: 60px; height: 70px; background: white; border: 2px dotted #999;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .stamp-btn span:first-child { font-size: 1.8rem; }
-        .stamp-btn span:last-child { font-size: 1.3rem; color: #333; }
+        .stamp:nth-child(odd) { transform: rotate(-3deg); }
+        .stamp:nth-child(even) { transform: rotate(3deg); }
     </style>
 </head>
 <body>
 
 <div id="app">
     <div id="cover-page">
-        <h1 class="cover-title">Hold Space<br>for the<br>Becoming</h1>
-        <button class="start-btn" onclick="openDiary()">다이어리 열기 ⭐</button>
+        <div class="lace top"></div>
+        <h1 class="title-cross">Hold Space for the Becoming</h1>
+        <button id="login-btn">Diary Start ⭐</button>
+        <div class="lace bottom"></div>
     </div>
 
     <div id="main-page">
-        <div class="washi-tape"></div>
-        <h2 class="page-title" id="page-title">To-Do List</h2>
-        
-        <div id="content-area">
-            <div class="todo-item"><span class="star-checkbox">⭐</span> Vercel에 과제 업로드하기</div>
-            <div class="todo-item"><span class="star-checkbox">⭐</span> 배경 이미지 내 걸로 바꾸기</div>
-            <div class="todo-item"><span class="star-checkbox">⭐</span> 타임트래커 영역 꾸며보기</div>
+        <div class="page-container" id="content">
+            <h2 id="page-title">To-Do List</h2>
+            <div id="data-area">
+                </div>
         </div>
     </div>
 
-    <nav id="bottom-nav" style="display: none;">
-        <div class="stamp-btn" style="transform: rotate(-4deg);" onclick="changeTab('To-Do List')">
-            <span>📝</span><span>할일</span>
-        </div>
-        <div class="stamp-btn" style="transform: rotate(3deg);" onclick="changeTab('Weekly Plan')">
-            <span>📅</span><span>주간</span>
-        </div>
-        <div class="stamp-btn" style="transform: rotate(-2deg);" onclick="changeTab('Time Tracker')">
-            <span>⏳</span><span>기록</span>
-        </div>
-        <div class="stamp-btn" style="transform: rotate(5deg);" onclick="changeTab('Memo')">
-            <span>💭</span><span>메모</span>
-        </div>
+    <nav id="navbar" style="display: none;">
+        <div class="stamp" onclick="showPage('todo')"><span>📝</span><span>할일</span></div>
+        <div class="stamp" onclick="showPage('weekly')"><span>📅</span><span>주간</span></div>
+        <div class="stamp" onclick="showPage('tracker')"><span>⏳</span><span>기록</span></div>
+        <div class="stamp" onclick="showPage('memo')"><span>💭</span><span>메모</span></div>
     </nav>
 </div>
 
-<script>
-    // 1. 다이어리 열기 버튼을 누르면 표지가 사라지고 내지가 나옴
-    function openDiary() {
-        document.getElementById('cover-page').style.display = 'none';
-        document.getElementById('main-page').style.display = 'block';
-        document.getElementById('bottom-nav').style.display = 'flex';
-    }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
-    // 2. 하단 우표 메뉴를 누르면 제목이 바뀜
-    function changeTab(title) {
-        document.getElementById('page-title').innerText = title;
-    }
+    // ❗ 1. 네 파이어베이스 설정값으로 교체해!
+    const firebaseConfig = {// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDKGfF4ziEzUlqEACTJ0bPmiYRcbn9vBtM",
+  authDomain: "konnngs-dfd9d.firebaseapp.com",
+  databaseURL: "https://konnngs-dfd9d-default-rtdb.firebaseio.com",
+  projectId: "konnngs-dfd9d",
+  storageBucket: "konnngs-dfd9d.firebasestorage.app",
+  messagingSenderId: "954348230269",
+  appId: "1:954348230269:web:0049423f4f20d0ee560314"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+}
 </script>
 
 </body>
