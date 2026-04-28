@@ -29,7 +29,7 @@
         /* --- 1. 표지 --- */
         #cover-page {
             position: absolute; inset: 0; z-index: 100;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('다이어리 내부 메모지2.jpg') center/cover;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('초여름 나무.jpg') center/cover;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -142,7 +142,7 @@
 
 <div id="app">
     <div id="cover-page">
-        <h1 class="cover-title">✴◦◟◌ ͙<br>This is<br>NK's</h1>
+        <h1 class="cover-title">✴◦◟◌ ͙<br>My Dairy<br>in summer.</h1>
         <button class="start-btn" id="entry-btn">Open!</button>
     </div>
 
@@ -167,7 +167,7 @@
                     <input type="text" id="wish-price" placeholder="얼마인가">
                     <input type="text" id="wish-reason" placeholder="이건 나에 것이야 왜냐면. (՞⋅֊⋅՞)">
                     <input type="file" id="wish-file" accept="image/*" style="font-size: 0.8rem;">
-                    <button id="add-wish-btn" style="background: var(--point-green); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">위시리스트에 추가~₍ᐢ..ᐢ₎⊹</button>
+                    <button id="add-wish-btn" style="background: var(--point-green); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">위시리스트 추가~₍ᐢ..ᐢ₎⊹</button>
                 </div>
                 <ul id="wish-list"></ul>
             </div>
@@ -178,14 +178,14 @@
                         <input type="text" id="study-subject" placeholder="과목명 (예: 전공강의)">
                         <input type="text" id="study-task" placeholder="할 일 (예: 3주차 복습)">
                     </div>
-                    <button id="add-study-btn">공부 리스트에 추가 🌿</button>
+                    <button id="add-study-btn">할 수 있다 다 부셔⚝(๑⚈ ․̫ ⚈๑)∩</button>
                 </div>
                 <ul id="study-list"></ul>
             </div>
         </div>
     </div> <nav>
         <div class="stamp-btn" onclick="changePage('todo')">˗ˋˏϟˎˊ˗<br>할 일</div>
-        <div class="stamp-btn" onclick="changePage('study')">📖<br>공부</div>
+        <div class="stamp-btn" onclick="changePage('study')">✌( ・ ・ )<br>공부</div>
         <div class="stamp-btn" onclick="changePage('wishlist')">나애<br>위시wish</div>
         <div class="stamp-btn" onclick="changePage('memo')">✴ ͙ <br>메모</div>
     </nav>
