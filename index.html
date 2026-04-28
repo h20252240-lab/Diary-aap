@@ -44,19 +44,34 @@
             text-shadow: 3px 3px 0px rgba(93, 124, 90, 0.7); 
         }
 
-        .start-btn {
-            background: white; color: var(--point-green); border: 2px dashed var(--point-green);
-            padding: 12px 30px; font-size: 1.8rem; border-radius: 50px; cursor: pointer;
-            font-family: inherit; transition: 0.3s;
-        }
-        .start-btn:hover { transform: scale(1.1); background: var(--point-green); color: white; }
-        /* --- 2. 다이어리 내지 --- */
-        #main-diary {
-            width: 100%; height: 100%; padding: 40px 25px;
-            background: linear-gradient(rgba(252, 250, 242, 0.80), rgba(244, 241, 234, 0.9)), url('녹음.jpg') center/cover;
-            overflow-y: auto; display: flex; flex-direction: column; padding-bottom: 110px;
+.start-btn {
+            /* 1. 배경색 투명도 (흰색을 60% 정도만 채움) */
+            background: rgba(255, 255, 255, 0.5); 
+            
+            /* 2. 글자색 투명도 (초록색을 80% 농도로) */
+            color: rgba(93, 124, 90, 0.8); 
+            
+            /* 3. 테두리 투명도 (초록색 점선을 50% 농도로) */
+            border: 2px dashed rgba(93, 124, 90, 0.5); 
+            
+            padding: 12px 30px; 
+            font-size: 1.8rem; 
+            border-radius: 50px; 
+            cursor: pointer;
+            font-family: inherit; 
+            transition: 0.3s;
+            
+            /* (선택사항) 뒤 배경을 살짝 흐리게 만들면 더 고급스러워 보여! */
+            backdrop-filter: blur(3px); 
         }
 
+        .start-btn:hover { 
+            transform: scale(1.1); 
+            /* 마우스 올렸을 때는 다시 진하게 보이도록 설정했어 */
+            background: var(--point-green); 
+            color: white; 
+            border-style: solid;
+        }
         .tape {
             width: 100px; height: 30px; background: rgba(181, 201, 154, 0.6);
             margin: -20px auto 20px; transform: rotate(-2deg); box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
