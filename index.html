@@ -238,7 +238,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+const provider = new GoogleAuthProvider();
+
+// ✨ 이 코드를 꼭 추가하세요!
+provider.setCustomParameters({
+  prompt: 'select_account'
+});
 
     let uid = null;
     let currentPage = 'todo';
