@@ -28,7 +28,7 @@
             display: flex; flex-direction: column;
         }
 
-        /* ✨ 피드백 1: 모바일에서는 검은색 네모 테두리 없애고 화면 꽉 채우기 */
+        /* 모바일 테두리 제거 */
         @media (max-width: 600px) {
             body { align-items: flex-start; }
             #app {
@@ -138,6 +138,7 @@
         
         #study-list { list-style: none; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
         .study-item { background: white; padding: 12px; border-radius: 15px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); position: relative; animation: fadeIn 0.4s ease; }
+        .study-item { background: white; padding: 12px; border-radius: 15px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); position: relative; animation: fadeIn 0.4s ease; }
         .study-subject { font-size: 1.1rem; color: var(--accent-brown); font-weight: bold; margin-bottom: 5px; }
         .study-task { font-size: 1.5rem; margin-bottom: 10px; }
         .progress-stamps { display: flex; gap: 5px; flex-wrap: wrap; min-height: 35px; padding: 5px; background: #fdfbf7; border-radius: 8px; border: 1px solid #eee; }
@@ -167,12 +168,12 @@
 </head>
 <body>
 
-<div id="loading">(˙ ᵋ ˙ э )Э˖⋆࿐໋ 로딩중...</div>
+<div id="loading">(˙ . ˙ э )Э˖⋆࿐໋ 로딩중...</div>
 
 <div id="app">
     <div id="cover-page">
-        <h1 class="cover-title">✴◦◟◌ ͙<br>My Dairy<br>in summer.</h1>
-        <button class="start-btn" id="login-btn">Open! 🌿 (Login)</button>
+        <h1 class="cover-title">✴◦◟◌ ͙<br>My Diary<br>in summer.</h1>
+        <button class="start-btn" id="login-btn">open!</button>
     </div>
 
     <div id="main-diary">
@@ -185,7 +186,7 @@
             <div id="todo-container">
                 <div class="todo-input-area">
                     <input type="text" id="todo-input" placeholder="바쁘다 바빠(๑´灬`๑)...">
-                    <button id="add-todo-btn">➕</button>
+                    <button id="add-todo-btn">+</button>
                 </div>
                 <ul id="todo-list"></ul>
             </div>
@@ -194,7 +195,7 @@
                 <div class="wish-input-form">
                     <input type="text" id="wish-name" placeholder="무엇인고">
                     <input type="text" id="wish-price" placeholder="얼마인가">
-                    <input type="text" id="wish-reason" placeholder="이건 나에 것이야 왜냐면. (՞⋅֊⋅՞)">
+                    <input type="text" id="wish-reason" placeholder="나애 것이야 왜냐면. (՞⋅֊⋅՞)">
                     <input type="file" id="wish-file" accept="image/*" style="font-size: 0.8rem;">
                     <button id="add-wish-btn" style="background: var(--point-green); color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">위시리스트 추가~₍ᐢ..ᐢ₎⊹</button>
                 </div>
@@ -238,34 +239,30 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
 
-// ✨ 이 코드를 꼭 추가하세요!
-provider.setCustomParameters({
-  prompt: 'select_account'
-});
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
 
     let uid = null;
     let currentPage = 'todo';
     let currentListener = null;
-    let isUserLoggedIn = false; // ✨ 로그인 상태 체크 변수
+    let isUserLoggedIn = false;
 
-    // --- ✨ 피드백 2: 로그인되어 있어도 'Open!' 버튼을 눌러야만 표지가 열리도록 수정 ---
     const loginBtn = document.getElementById('login-btn');
     if(loginBtn) {
         loginBtn.onclick = async () => {
             const cover = document.getElementById('cover-page');
             if (isUserLoggedIn) {
-                // 이미 로그인 상태면 표지만 열기
                 if(cover) cover.classList.add('open');
             } else {
-                // 로그인이 안 되어있으면 팝업 띄우기
                 try {
                     const result = await signInWithPopup(auth, provider);
                     if (result.user && cover) cover.classList.add('open');
                 } catch (err) {
                     console.error("로그인 에러:", err);
-                    alert("로그인에 실패했어요! Firebase 설정을 확인해주세요.");
+                    alert("로그인에 실패했어요! 파이어베이스 규칙이나 사파리 추적 방지 설정을 확인해 주세요.");
                 }
             }
         };
@@ -277,7 +274,7 @@ provider.setCustomParameters({
         
         if (user) { 
             uid = user.uid; 
-            isUserLoggedIn = true; // 로그인 정보만 저장하고, 표지는 자동으로 열지 않음
+            isUserLoggedIn = true;
             changePage('todo'); 
         }
     });
@@ -474,7 +471,6 @@ provider.setCustomParameters({
         if (!uid) return;
         if (currentListener) currentListener(); 
 
-        // ✨ 피드백 3: 파이어베이스 실시간 동기화(onSnapshot)로 기기 간 연동 보장
         currentListener = onSnapshot(doc(db, "diaries", uid, "pages", page), (docSnap) => {
             const ed = document.getElementById('editor');
             if (page === 'todo') renderTodoList(docSnap.exists() ? docSnap.data().tasks || [] : []);
